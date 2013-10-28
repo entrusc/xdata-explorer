@@ -1,0 +1,2 @@
+Icons are licensed under Creative Commons Attribution 2.5 License (http://creativecommons.org/licenses/by/2.5/) and are based
+on the set "Silk Icons" (also licensed under Creative Commons Attribution 2.5 License) by famfamfam.com.
