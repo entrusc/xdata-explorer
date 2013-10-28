@@ -145,7 +145,7 @@
                             <versionInfo>
                                 <fileVersion>${project.version}.${buildNumber}</fileVersion>
                                 <txtFileVersion>${project.version}.${buildNumber}</txtFileVersion>
-                                <fileDescription>xdata Explorer Compositor</fileDescription>
+                                <fileDescription>xdata explorer</fileDescription>
                                 <copyright>Copyright 2013 by Lastdigitofpi Inh. Florian Frankenberger</copyright>
                                 <productVersion>${project.version}.${buildNumber}</productVersion>
                                 <txtProductVersion>${project.version}.${buildNumber}</txtProductVersion>
