@@ -9,8 +9,8 @@ binaries
 ========
 For convenience there are binaries available of the most recent version:
 
-    * http://lastdigitofpi.com/files/xdata-explorer-win.zip
-    * http://lastdigitofpi.com/files/xdata-explorer-other.zip
+* http://lastdigitofpi.com/files/xdata-explorer-win.zip
+* http://lastdigitofpi.com/files/xdata-explorer-other.zip
 
 how to build and use?
 =====================
@@ -24,8 +24,8 @@ then type:
 
 next there should be two files in ./target:
 
-    * xdata-explorer-win.zip
-    * xdata-explorer-other.zip
+* xdata-explorer-win.zip
+* xdata-explorer-other.zip
 
 containing the executables for windows and linux/OSX accordingly.
 
