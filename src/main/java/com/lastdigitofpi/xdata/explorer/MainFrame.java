@@ -244,6 +244,7 @@ public class MainFrame extends javax.swing.JFrame {
             saveButton.setEnabled(true);
             openFile = file;
             openNode = node;
+            setTitle(openFile.getName() + " - xdata explorer");
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }

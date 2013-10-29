@@ -16,6 +16,7 @@
  */
 package com.lastdigitofpi.xdata.explorer;
 
+import java.util.List;
 import org.jdesktop.swingx.renderer.StringValue;
 
 /**
@@ -26,8 +27,12 @@ public class DataNodeStringValue implements StringValue {
 
     @Override
     public String getString(Object o) {
-        DataElement element = (DataElement) o;
-        return element.getKey();
+        DataElement dataElement = (DataElement) o;
+        if (dataElement.getParent() != null && dataElement.getParent().getValue() instanceof List) {
+            return "[" + dataElement.getKey() + "]";
+        } else {
+            return dataElement.getKey();
+        }        
     }
 
 }

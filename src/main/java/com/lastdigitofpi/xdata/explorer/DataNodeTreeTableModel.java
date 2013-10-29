@@ -81,11 +81,7 @@ public class DataNodeTreeTableModel implements TreeTableModel {
         Object value = dataElement.getValue();
         switch (i) {
             case 0:
-                if (dataElement.getParent() != null && dataElement.getParent().getValue() instanceof List) {
-                    return "[" + dataElement.getKey() + "]";
-                } else {
-                    return dataElement.getKey();
-                }
+                return "";
             case 1:
                 if (value == null) {
                     return "";
