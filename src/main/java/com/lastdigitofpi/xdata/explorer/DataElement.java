@@ -17,13 +17,13 @@
 package com.lastdigitofpi.xdata.explorer;
 
 /**
- * 
+ *
  * @author Florian Frankenberger
  */
 public class DataElement {
 
     private final DataNodeTreeTableModel model;
-    
+
     private final DataElement parent;
     private final String key;
     private Object value;
@@ -50,9 +50,43 @@ public class DataElement {
     public DataElement getParent() {
         return parent;
     }
-    
+
     public void setValue(Object value) {
         this.value = value;
         this.model.notifyOnChanged(this);
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 53 * hash + (this.model != null ? this.model.hashCode() : 0);
+        hash = 53 * hash + (this.key != null ? this.key.hashCode() : 0);
+        return hash;
+    }
+
+    /**
+     * as these items contain the whole subtree we only
+     * compare based on key and model at this level
+     * 
+     * @param obj
+     * @return
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final DataElement other = (DataElement) obj;
+        if (this.model != other.model && (this.model == null || !this.model.equals(other.model))) {
+            return false;
+        }
+        if ((this.key == null) ? (other.key != null) : !this.key.equals(other.key)) {
+            return false;
+        }
+        return true;
+    }
+
 }

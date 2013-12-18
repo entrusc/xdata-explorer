@@ -29,7 +29,7 @@ import javax.swing.tree.TreePath;
 import org.jdesktop.swingx.treetable.TreeTableModel;
 
 /**
- * 
+ *
  * @author Florian Frankenberger
  */
 public class DataNodeTreeTableModel implements TreeTableModel {
@@ -40,7 +40,7 @@ public class DataNodeTreeTableModel implements TreeTableModel {
     public DataNodeTreeTableModel(DataNode node) {
         this.node = node;
     }
-    
+
     @Override
     public Class<?> getColumnClass(int i) {
         switch (i) {
@@ -158,7 +158,7 @@ public class DataNodeTreeTableModel implements TreeTableModel {
                 return null;
             }
     }
-    
+
     @Override
     public int getChildCount(Object parent) {
         DataElement dataElement = (DataElement) parent;
@@ -204,22 +204,26 @@ public class DataNodeTreeTableModel implements TreeTableModel {
                 return 0;
             }
     }
-    
+
+    public void notifyOnChildrenChanged(DataElement element) {
+        final Object[] path = createPath(element).toArray();
+        final TreeModelEvent e = new TreeModelEvent(this, path);
+
+        for (TreeModelListener listener : treeModelListeners) {
+            listener.treeStructureChanged(e);
+        }
+    }
+
     /**
      * synchronizes the data in the element with the actual data node and
      * notifies the view about the change.
-     * 
-     * @param element 
+     *
+     * @param element
      */
     public void notifyOnChanged(DataElement element) {
-        final List<DataElement> pathList = new ArrayList<DataElement>();
-        DataElement currentElement = element;
-        while (currentElement != null) {
-            pathList.add(currentElement);
-            currentElement = currentElement.getParent();
-        }
+        final List<DataElement> pathList = createPath(element);
         pathList.remove(0);
-        DataElement parent = pathList.get(0);
+        DataElement parent = pathList.isEmpty() ? null : pathList.get(0);
         Collections.reverse(pathList);
 
         final Object parentObject;
@@ -228,7 +232,7 @@ public class DataNodeTreeTableModel implements TreeTableModel {
         } else {
             parentObject = parent.getValue();
         }
-        
+
         if (parentObject instanceof DataNode) {
             DataNode aNode = (DataNode) parentObject;
             aNode.setObject(DataKey.create(element.getKey(), Object.class), element.getValue());
@@ -238,15 +242,25 @@ public class DataNodeTreeTableModel implements TreeTableModel {
                 int index = Integer.valueOf(element.getKey());
                 list.set(index, element.getValue());
             }
-        
+
         final Object[] path = pathList.toArray();
         final TreeModelEvent e = new TreeModelEvent(this, path, new int[] {getIndexOfChild(parent, element.getValue())}, new Object[] {element});
-        
+
         for (TreeModelListener listener : treeModelListeners) {
             listener.treeNodesChanged(e);
         }
     }
-    
+
+    private List<DataElement> createPath(DataElement element) {
+        final List<DataElement> pathList = new ArrayList<DataElement>();
+        DataElement currentElement = element;
+        while (currentElement != null) {
+            pathList.add(currentElement);
+            currentElement = currentElement.getParent();
+        }
+        return pathList;
+    }
+
     @Override
     public void addTreeModelListener(TreeModelListener l) {
         treeModelListeners.add(l);

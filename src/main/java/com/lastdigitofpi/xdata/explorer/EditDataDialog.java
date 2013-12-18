@@ -16,20 +16,8 @@
  */
 package com.lastdigitofpi.xdata.explorer;
 
+import com.lastdigitofpi.xdata.explorer.TypeWrapperModel.TypeWrapper;
 import java.awt.Color;
-import java.awt.Component;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Vector;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.Icon;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.tree.TreePath;
@@ -40,308 +28,8 @@ import javax.swing.tree.TreePath;
  */
 public class EditDataDialog extends javax.swing.JDialog {
 
-    private static abstract class TypeWrapper<T> {
-
-        public abstract Class<T> getType();
-
-        /**
-         * if null is returned then the string is not valid
-         *
-         * @param string
-         * @return
-         */
-        public abstract T wrap(String string);
-
-        public String unWrap(T object) {
-            return object.toString();
-        }
-
-        public boolean enableEditor() {
-            return true;
-        }
-
-        @Override
-        public String toString() {
-            return getType().getSimpleName();
-        }
-
-        public abstract Icon getIcon();
-
-    }
-
-    private static final TypeWrapper[] TYPE_WRAPPERS = new TypeWrapper[]{
-        new TypeWrapper<String>() {
-
-            @Override
-            public Class<String> getType() {
-                return String.class;
-            }
-
-            @Override
-            public String wrap(String string) {
-                return string;
-            }
-
-            @Override
-            public Icon getIcon() {
-                return DataNodeIconValue.ICON_STRING;
-            }
-
-        },
-        new TypeWrapper<Byte>() {
-
-            @Override
-            public Class<Byte> getType() {
-                return Byte.class;
-            }
-
-            @Override
-            public Byte wrap(String string) {
-                try {
-                    return Byte.parseByte(string);
-                } catch (NumberFormatException e) {
-                    return null;
-                }
-            }
-
-            @Override
-            public Icon getIcon() {
-                return DataNodeIconValue.ICON_INTEGER;
-            }
-
-        },
-        new TypeWrapper<Short>() {
-
-            @Override
-            public Class<Short> getType() {
-                return Short.class;
-            }
-
-            @Override
-            public Short wrap(String string) {
-                try {
-                    return Short.parseShort(string);
-                } catch (NumberFormatException e) {
-                    return null;
-                }
-            }
-
-            @Override
-            public Icon getIcon() {
-                return DataNodeIconValue.ICON_INTEGER;
-            }
-        },
-        new TypeWrapper<Character>() {
-
-            @Override
-            public Class<Character> getType() {
-                return Character.class;
-            }
-
-            @Override
-            public Character wrap(String string) {
-                try {
-                    return Character.forDigit(Integer.valueOf(string), 10);
-                } catch (NumberFormatException e) {
-                    return null;
-                }
-            }
-
-            @Override
-            public Icon getIcon() {
-                return DataNodeIconValue.ICON_INTEGER;
-            }
-        },
-        new TypeWrapper<Integer>() {
-
-            @Override
-            public Class<Integer> getType() {
-                return Integer.class;
-            }
-
-            @Override
-            public Integer wrap(String string) {
-                try {
-                    return Integer.parseInt(string);
-                } catch (NumberFormatException e) {
-                    return null;
-                }
-            }
-
-            @Override
-            public Icon getIcon() {
-                return DataNodeIconValue.ICON_INTEGER;
-            }
-        },
-        new TypeWrapper<Long>() {
-
-            @Override
-            public Class<Long> getType() {
-                return Long.class;
-            }
-
-            @Override
-            public Long wrap(String string) {
-                try {
-                    return Long.valueOf(string);
-                } catch (NumberFormatException e) {
-                    return null;
-                }
-            }
-
-            @Override
-            public Icon getIcon() {
-                return DataNodeIconValue.ICON_INTEGER;
-            }
-        },
-        new TypeWrapper<Float>() {
-
-            @Override
-            public Class<Float> getType() {
-                return Float.class;
-            }
-
-            @Override
-            public Float wrap(String string) {
-                try {
-                    return Float.valueOf(string);
-                } catch (NumberFormatException e) {
-                    return null;
-                }
-            }
-
-            @Override
-            public Icon getIcon() {
-                return DataNodeIconValue.ICON_FLOAT;
-            }
-        },
-        new TypeWrapper<Double>() {
-
-            @Override
-            public Class<Double> getType() {
-                return Double.class;
-            }
-
-            @Override
-            public Double wrap(String string) {
-                try {
-                    return Double.valueOf(string);
-                } catch (NumberFormatException e) {
-                    return null;
-                }
-            }
-
-            @Override
-            public Icon getIcon() {
-                return DataNodeIconValue.ICON_FLOAT;
-            }
-        },
-        new TypeWrapper<Boolean>() {
-            
-            @Override
-            public Class<Boolean> getType() {
-                return Boolean.class;
-            }
-
-            @Override
-            public Boolean wrap(String string) {
-                return Boolean.valueOf(string);
-            }
-
-            @Override
-            public Icon getIcon() {
-                return DataNodeIconValue.ICON_BOOLEAN;
-            }
-        },
-        new TypeWrapper<Date>() {
-
-            private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
-            @Override
-            public Class<Date> getType() {
-                return Date.class;
-            }
-
-            @Override
-            public Date wrap(String string) {
-                try {
-                    return dateFormat.parse(string);
-                } catch (ParseException e) {
-                    return null;
-                }
-            }
-
-            @Override
-            public String unWrap(Date object) {
-                return dateFormat.format(object);
-            }
-
-            @Override
-            public Icon getIcon() {
-                return DataNodeIconValue.ICON_DATE;
-            }
-
-        },
-        new TypeWrapper<URL>() {
-
-            @Override
-            public Class<URL> getType() {
-                return URL.class;
-            }
-
-            @Override
-            public URL wrap(String string) {
-                try {
-                    return new URL(string);
-                } catch (MalformedURLException e) {
-                    return null;
-                }
-            }
-
-            @Override
-            public Icon getIcon() {
-                return DataNodeIconValue.ICON_URL;
-            }
-
-        },
-        new TypeWrapper<Void>() {
-
-            @Override
-            public Class<Void> getType() {
-                return Void.class;
-            }
-
-            @Override
-            public Void wrap(String string) {
-                return null;
-            }
-
-            @Override
-            public String unWrap(Void object) {
-                return "";
-            }
-
-            @Override
-            public boolean enableEditor() {
-                return false;
-            }
-
-            @Override
-            public String toString() {
-                return "Null";
-            }
-
-            @Override
-            public Icon getIcon() {
-                return DataNodeIconValue.ICON_NULL;
-            }
-
-        },
-    };
-
-    
     private final DataElement element;
-    
+
     /**
      * Creates new form EditDataDialog
      *
@@ -352,16 +40,16 @@ public class EditDataDialog extends javax.swing.JDialog {
     public EditDataDialog(java.awt.Frame parent, TreePath path, DataElement element) {
         super(parent, true);
         this.element = element;
-        
+
         initComponents();
 
         Object value = element.getValue();
-        
-        typeSelector.setModel(new DefaultComboBoxModel(new Vector(Arrays.asList(TYPE_WRAPPERS))));
+
+        typeSelector.setModel(new TypeWrapperModel());
 
         typeSelector.setRenderer(new TypeWrapperRenderer());
         if (value != null) {
-            for (TypeWrapper<Object> typeWrapper : TYPE_WRAPPERS) {
+            for (TypeWrapper<Object> typeWrapper : TypeWrapperModel.TYPE_WRAPPERS) {
                 if (typeWrapper.getType().equals(value.getClass())) {
                     valueField.setText(typeWrapper.unWrap(value));
                     typeSelector.setSelectedItem(typeWrapper);
@@ -369,7 +57,7 @@ public class EditDataDialog extends javax.swing.JDialog {
                 }
             }
         } else {
-            TypeWrapper<Object> typeWrapper = TYPE_WRAPPERS[TYPE_WRAPPERS.length - 1];
+            TypeWrapper<Object> typeWrapper = TypeWrapperModel.TYPE_WRAPPERS[TypeWrapperModel.TYPE_WRAPPERS.length - 1];
             valueField.setText(typeWrapper.unWrap(value));
             typeSelector.setSelectedItem(typeWrapper);
         }
@@ -412,40 +100,7 @@ public class EditDataDialog extends javax.swing.JDialog {
         }
     }
 
-    private static class TypeWrapperRenderer extends JLabel implements ListCellRenderer {
 
-        public TypeWrapperRenderer() {
-            setOpaque(true);
-        }
-
-        /*
-         * This method finds the image and text corresponding
-         * to the selected value and returns the label, set up
-         * to display the text and image.
-         */
-        @Override
-        public Component getListCellRendererComponent(
-                JList list,
-                Object value,
-                int index,
-                boolean isSelected,
-                boolean cellHasFocus) {
-            if (isSelected) {
-                setBackground(list.getSelectionBackground());
-                setForeground(list.getSelectionForeground());
-            } else {
-                setBackground(list.getBackground());
-                setForeground(list.getForeground());
-            }
-
-            TypeWrapper<Object> wrapper = (TypeWrapper<Object>) value;
-
-            setIcon(wrapper.getIcon());
-            setText(wrapper.toString());
-            return this;
-        }
-
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -562,7 +217,7 @@ public class EditDataDialog extends javax.swing.JDialog {
         TypeWrapper<Object> wrapper = (TypeWrapper<Object>) typeSelector.getSelectedItem();
         Object newValue = wrapper.wrap(valueField.getText());
         element.setValue(newValue);
-        
+
         this.setVisible(false);
     }//GEN-LAST:event_updateButtonActionPerformed
 

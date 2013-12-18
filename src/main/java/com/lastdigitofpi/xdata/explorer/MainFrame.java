@@ -45,7 +45,7 @@ import org.jdesktop.swingx.treetable.TreeTableModel;
 public class MainFrame extends javax.swing.JFrame {
 
     private static final BufferedImage ICON_16, ICON_32;
-    
+
     static {
         try {
             ICON_16 = ImageIO.read(MainFrame.class.getResourceAsStream("/icon-16.png"));
@@ -54,19 +54,20 @@ public class MainFrame extends javax.swing.JFrame {
             throw new IllegalStateException(e);
         }
     }
-    
+
     private final JFileChooser openFileChooser = new JFileChooser();
 
     private File openFile = null;
     private DataNode openNode = null;
-    
+    private JXTreeTable tree;
+
     /**
      * Creates new form MainFrame
      * @param fileToOpen
      */
     public MainFrame(File fileToOpen) {
         initComponents();
-        
+
         openFileChooser.setFileFilter(new FileFilter() {
 
             @Override
@@ -79,13 +80,13 @@ public class MainFrame extends javax.swing.JFrame {
                 return "xdata file (*.xdata)";
             }
         });
-        
+
         setLocationRelativeTo(null);
         if (fileToOpen != null) {
             openFile(fileToOpen);
         }
     }
-    
+
     private JXTreeTable newTree(TreeTableModel model) {
         final JXTreeTable tableTree = new JXTreeTable(model);
         tableTree.setShowsRootHandles(true);
@@ -95,7 +96,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         tableTree.setRootVisible(true);
         tableTree.setTreeCellRenderer(new DefaultTreeRenderer(new DataNodeIconValue(), new DataNodeStringValue()));
-        
+
         tableTree.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tableTree.addTreeSelectionListener(new TreeSelectionListener() {
 
@@ -104,7 +105,7 @@ public class MainFrame extends javax.swing.JFrame {
                 pathLabel.setText(Utils.pathToString(e.getPath()));
             }
         });
-        
+
         tableTree.addMouseListener(new MouseListener() {
 
             @Override
@@ -136,9 +137,9 @@ public class MainFrame extends javax.swing.JFrame {
             @Override
             public void mouseExited(MouseEvent e) {
             }
-            
+
         });
-        
+
         return tableTree;
     }
 
@@ -154,6 +155,8 @@ public class MainFrame extends javax.swing.JFrame {
         jToolBar1 = new javax.swing.JToolBar();
         jButton1 = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        searchButton = new javax.swing.JButton();
         scrollPane = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
         pathLabel = new javax.swing.JLabel();
@@ -169,6 +172,7 @@ public class MainFrame extends javax.swing.JFrame {
         jToolBar1.setPreferredSize(new java.awt.Dimension(48, 28));
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/open.png"))); // NOI18N
+        jButton1.setToolTipText("Open ...");
         jButton1.setFocusable(false);
         jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -180,6 +184,7 @@ public class MainFrame extends javax.swing.JFrame {
         jToolBar1.add(jButton1);
 
         saveButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save.png"))); // NOI18N
+        saveButton.setToolTipText("Save");
         saveButton.setEnabled(false);
         saveButton.setFocusable(false);
         saveButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -190,6 +195,35 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(saveButton);
+
+        jPanel2.setMaximumSize(new java.awt.Dimension(8, 32767));
+        jPanel2.setPreferredSize(new java.awt.Dimension(8, 26));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 8, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 26, Short.MAX_VALUE)
+        );
+
+        jToolBar1.add(jPanel2);
+
+        searchButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/page_white_find.png"))); // NOI18N
+        searchButton.setToolTipText("Search");
+        searchButton.setEnabled(false);
+        searchButton.setFocusable(false);
+        searchButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        searchButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        searchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchButtonActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(searchButton);
 
         pathLabel.setText(" ");
 
@@ -222,7 +256,9 @@ public class MainFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
                 .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -239,9 +275,10 @@ public class MainFrame extends javax.swing.JFrame {
     private void openFile(File file) {
         try {
             DataNode node = XData.load(file, true);
-            newTree(new DataNodeTreeTableModel(node));
+            tree = newTree(new DataNodeTreeTableModel(node));
 
             saveButton.setEnabled(true);
+            searchButton.setEnabled(true);
             openFile = file;
             openNode = node;
             setTitle(openFile.getName() + " - xdata explorer");
@@ -260,13 +297,20 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+        SearchDialog searchDialog = new SearchDialog(this, tree, openNode);
+        searchDialog.setVisible(true);
+    }//GEN-LAST:event_searchButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JLabel pathLabel;
     private javax.swing.JButton saveButton;
     private javax.swing.JScrollPane scrollPane;
+    private javax.swing.JButton searchButton;
     // End of variables declaration//GEN-END:variables
 }
