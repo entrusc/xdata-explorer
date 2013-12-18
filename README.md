@@ -3,7 +3,7 @@ xdata explorer
 A simple GUI application that allows to browse xdata files that were created with
 the xdata library (http://github.com/entrusc/xdata).
 
-![xdata explorer screenshot](http://lastdigitofpi.com/files/xdata-explorer-screenshot.png "xdata explorer screenshot")
+![xdata explorer screenshot](http://lastdigitofpi.com/files/xdata-explorer-screenshot2.png "xdata explorer screenshot")
 
 binaries
 ========
