@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.lastdigitofpi.xdata.explorer;
+package com.moebiusgames.xdata.explorer;
 
 import java.net.MalformedURLException;
 import java.net.URL;

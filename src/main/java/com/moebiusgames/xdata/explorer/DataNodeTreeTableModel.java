@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.lastdigitofpi.xdata.explorer;
+package com.moebiusgames.xdata.explorer;
 
-import com.lastdigitofpi.xdata.DataKey;
-import com.lastdigitofpi.xdata.DataNode;
+import com.moebiusgames.xdata.DataKey;
+import com.moebiusgames.xdata.DataNode;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;

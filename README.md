@@ -3,14 +3,14 @@ xdata explorer
 A simple GUI application that allows to browse xdata files that were created with
 the xdata library (http://github.com/entrusc/xdata).
 
-![xdata explorer screenshot](http://lastdigitofpi.com/files/xdata-explorer-screenshot2.png "xdata explorer screenshot")
+![xdata explorer screenshot](http://moebiusgames.com/files/xdata-explorer-screenshot.png "xdata explorer screenshot")
 
 binaries
 ========
 For convenience there are binaries available of the most recent version:
 
-* http://lastdigitofpi.com/files/xdata-explorer-windows.zip
-* http://lastdigitofpi.com/files/xdata-explorer-other.zip
+* http://moebiusgames.com/files/xdata-explorer-windows.zip
+* http://moebiusgames.com/files/xdata-explorer-other.zip
 
 how to build and use?
 =====================
